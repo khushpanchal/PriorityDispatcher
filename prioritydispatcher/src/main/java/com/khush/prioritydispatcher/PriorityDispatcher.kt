@@ -4,11 +4,16 @@ import com.khush.prioritydispatcher.internal.CustomPriorityDispatcher
 import com.khush.prioritydispatcher.internal.Priority
 import com.khush.prioritydispatcher.internal.PriorityRunnable
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExecutorCoroutineDispatcher
+import kotlinx.coroutines.Runnable
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.PriorityBlockingQueue
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.coroutines.CoroutineContext
 
 
 object PriorityDispatcher {
@@ -28,6 +33,10 @@ object PriorityDispatcher {
                 else p2.priority.ordinal - p1.priority.ordinal //high ordinal, high priority
             }
         )
+    }
+
+    private val immediateTaskExecutorService: ExecutorService by lazy {
+        Executors.newCachedThreadPool()
     }
 
     fun low(): CoroutineDispatcher {
@@ -54,6 +63,20 @@ object PriorityDispatcher {
         )
     }
 
+    fun immediate(): CoroutineDispatcher {
+        return object : ExecutorCoroutineDispatcher() {
+            override val executor: Executor
+                get() = immediateTaskExecutorService
+
+            override fun close() {
+                (executor as? ExecutorService)?.shutdown()
+            }
+
+            override fun dispatch(context: CoroutineContext, block: Runnable) {
+                executor.execute(block)
+            }
+        }
+    }
 }
 
 
