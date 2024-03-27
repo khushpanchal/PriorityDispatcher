@@ -10,7 +10,7 @@ Small utility Kotlin library, PriorityDispatcher, that prioritise tasks within c
 
 ### Installation
 
-To integrate PriorityDispatcher library into your Android project, follow these simple steps:
+To integrate PriorityDispatcher library into your projects, follow these simple steps:
 
 1. Update your settings.gradle file with the following dependency.
    
@@ -29,7 +29,7 @@ dependencyResolutionManagement {
    
 ```Groovy
 dependencies {
-        implementation 'com.github.khushpanchal:PriorityDispatcher:1.0.0'
+        implementation 'com.github.khushpanchal:PriorityDispatcher:1.0.1'
 }
 ```
 
